@@ -6,7 +6,7 @@ console.log("Running API tests...");
 run(
   {
     collection: "./tool-shop-products-dev-tests.postman_collection.json",
-    // environment: './',
+    environment: './tool-shop-prod-env.postman_environment.json',
     reporters: "cli",
   },
   function (err, summary) {
