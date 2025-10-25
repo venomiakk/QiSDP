@@ -7,6 +7,90 @@
 	},
 	"item": [
 		{
+			"name": "setup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Setup successful and variables saved\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const response = pm.response.json();\r",
+							"\r",
+							"    pm.expect(response.data).to.be.an('array').and.to.not.be.empty;\r",
+							"\r",
+							"    const data = response.data[0];\r",
+							"    console.log(\"Data:\", data);\r",
+							"\r",
+							"    const product_id = data.id;\r",
+							"    console.log(\"PRODUCT_ID:\", product_id);\r",
+							"    if (product_id) {\r",
+							"        pm.environment.set(\"PRODUCT_ID\", product_id);\r",
+							"        console.log(\"product_id was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"product_id was not found\");\r",
+							"    }\r",
+							"\r",
+							"    const image_id = data.product_image ? data.product_image.id : null;\r",
+							"    console.log(\"IMAGE_ID:\", image_id);\r",
+							"    if (image_id) {\r",
+							"        pm.environment.set(\"IMAGE_ID\", image_id);\r",
+							"        console.log(\"image_id was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"image_id was not found (or 'product_image' object is missing)\");\r",
+							"    }\r",
+							"\r",
+							"    const category_id = data.category ? data.category.id : null;\r",
+							"    console.log(\"CATEGORY_ID:\", category_id);\r",
+							"    if (category_id) {\r",
+							"        pm.environment.set(\"CATEGORY_ID\", category_id);\r",
+							"        console.log(\"category_id was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"category_id was not found (or 'category' object is missing)\");\r",
+							"    }\r",
+							"\r",
+							"    const brand_id = data.brand ? data.brand.id : null;\r",
+							"    console.log(\"BRAND_ID:\", brand_id);\r",
+							"    if (brand_id) {\r",
+							"        pm.environment.set(\"BRAND_ID\", brand_id);\r",
+							"        console.log(\"brand_id was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"brand_id was not found (or 'brand' object is missing)\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"01K8C0HH79SFPCK49BABE6EP2F\",\r\n    \"brand_id\": \"01K8C0HGXPBQ1G68FEG31H9KN1\",\r\n    \"product_image_id\": \"01K8C0HH80JJSNGZP9FQE56KCY\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8091/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "login",
 			"event": [
 				{
@@ -112,21 +196,12 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"responsStructPositiveTest\", function () {\r",
+							"pm.test(\"getProductByIdResponsStructPositiveTest\", function () {\r",
 							"    pm.response.to.have.jsonSchema(schema);\r",
 							"});\r",
 							"\r",
-							"// pm.test(\"correctProductNamePositiveTest\", function () {\r",
-							"//     var jsonData = pm.response.json();\r",
-							"//     pm.expect(jsonData.name).to.eql(\"Combination Pliers\");\r",
-							"// });\r",
 							"\r",
-							"// pm.test(\"wrongProductName\", function () {\r",
-							"//     var jsonData = pm.response.json();\r",
-							"//     pm.expect(jsonData.name).to.not.eql(\"Bledna Nazwa\");\r",
-							"// });\r",
-							"\r",
-							"pm.test(\"properHeadersPositiveTest\", function () {\r",
+							"pm.test(\"getProductByIdHeadersPositiveTest\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
 							"    pm.response.to.have.header(\"Server\");\r",
 							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
@@ -143,7 +218,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8091/products/01K86ST7856YVY7Q8FPHNSGZCK",
+					"raw": "http://localhost:8091/products/{{PRODUCT_ID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -151,7 +226,7 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"01K86ST7856YVY7Q8FPHNSGZCK"
+						"{{PRODUCT_ID}}"
 					]
 				}
 			},
@@ -164,17 +239,17 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"getProductByIdNegativeTest\", function () {\r",
+							"pm.test(\"getProductWithWrongIdNegativeTest\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"responseStructNegativeTest\", function () {\r",
+							"pm.test(\"getProductWithWrongResponseNegativeTest\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"message\");\r",
 							"    pm.expect(jsonData.message).to.be.a(\"string\");\r",
 							"});\r",
 							"\r",
-							"pm.test(\"properHeadersNegativeTest\", function () {\r",
+							"pm.test(\"getProductWithWrongHeadersNegativeTest\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 							"    pm.response.to.have.header(\"Server\");\r",
 							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
@@ -212,11 +287,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"tooLongIdDestructiveTest\", function () {\r",
+							"pm.test(\"getProductWithTooLongIdDestructiveTest\", function () {\r",
 							"    pm.response.to.have.status(414);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"properHeadersNegativeTest\", function () {\r",
+							"pm.test(\"getProductWithTooLongIdHeadersNegativeTest\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"text/html\");\r",
 							"    pm.response.to.have.header(\"Server\");\r",
 							"});"
@@ -297,7 +372,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n    \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n    \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -331,8 +406,8 @@
 							"\r",
 							"pm.test(\"responseStructNegativeTest\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"message\");\r",
-							"    pm.expect(jsonData.message).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData).to.have.property(\"price\");\r",
+							"    pm.expect(jsonData.product_image_id).to.be.a(\"array\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -346,7 +421,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n    \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n    \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -395,7 +470,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n    \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n    \"product_image_id\": 1,\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": 1,\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -444,7 +519,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n    \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n    \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -476,7 +551,7 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"updateProductResponseBodyTest\", function () {\r",
+							"pm.test(\"updateProductResponsePositiveTest\", function () {\r",
 							"    pm.expect(pm.response.json()).to.have.property(\"success\", true);\r",
 							"});"
 						],
@@ -491,7 +566,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"name\",\r\n  \"description\": \"description\",\r\n  \"price\": 1.99,\r\n  \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n  \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n  \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n  \"is_location_offer\": 1,\r\n  \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -499,7 +574,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8091/products/01K86ST7856YVY7Q8FPHNSGZCK",
+					"raw": "http://localhost:8091/products/{{ADDED_PRODUCT}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -507,7 +582,7 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"01K86ST7856YVY7Q8FPHNSGZCK"
+						"{{ADDED_PRODUCT}}"
 					]
 				}
 			},
@@ -539,7 +614,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"name\",\r\n  \"description\": \"description\",\r\n  \"price\": 1.99,\r\n  \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n  \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n  \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n  \"is_location_offer\": 1,\r\n  \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -587,7 +662,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"name\",\r\n  \"description\": \"description\",\r\n  \"price\": -1.99,\r\n  \"category_id\": \"01K86ST76KDF8FH87WFC086C0D\",\r\n  \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n  \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n  \"is_location_offer\": 1,\r\n  \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -595,7 +670,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8091/products/01K86ST7856YVY7Q8FPHNSGZCK",
+					"raw": "http://localhost:8091/products/{{ADDED_PRODUCT}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -603,7 +678,7 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"01K86ST7856YVY7Q8FPHNSGZCK"
+						"{{ADDED_PRODUCT}}"
 					]
 				}
 			},
@@ -635,7 +710,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"name\",\r\n  \"description\": \"description\",\r\n  \"price\": -1.99,\r\n  \"category_id\": \"wrong_id\",\r\n  \"brand_id\": \"01K86ST6V23VA9E4YQ5GTYHHK7\",\r\n  \"product_image_id\": \"01K86ST77934P1SQ2RXD0NXF59\",\r\n  \"is_location_offer\": 1,\r\n  \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"wrong_id\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -643,7 +718,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8091/products/01K86ST7856YVY7Q8FPHNSGZCK",
+					"raw": "http://localhost:8091/products/{{ADDED_PRODUCT}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -651,7 +726,7 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"01K86ST7856YVY7Q8FPHNSGZCK"
+						"{{ADDED_PRODUCT}}"
 					]
 				}
 			},

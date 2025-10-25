@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test-products": "newman run tool-shop-products-dev-tests.postman_collection.json -e tool-shop-prod-env.postman_environment.json"
+    "test-products": "newman run tool-shop-products-dev-tests.postman_collection.json -e tool-shop-prod-env.postman_environment.json",
+    "test-users": "newman run tool-shop-users-dev-tests.postman_collection.json -e tool-shop-user-env.postman_environment.json"
   },
   "keywords": [],
   "author": "",
