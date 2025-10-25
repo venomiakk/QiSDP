@@ -7,6 +7,61 @@
 	},
 	"item": [
 		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login successful\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const responseData = pm.response.json();\r",
+							"console.log(responseData)\r",
+							"const apiToken = responseData.access_token;\r",
+							"\r",
+							"if (apiToken) {\r",
+							"    pm.environment.set(\"AUTH_TOKEN\", apiToken);\r",
+							"    console.log(\"Token saved in env.\");\r",
+							"} else {\r",
+							"    console.error(\"No token in response!\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@practicesoftwaretesting.com\",\r\n  \"password\": \"welcome01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "register_user_positive",
 			"event": [
 				{
@@ -76,61 +131,6 @@
 					"path": [
 						"users",
 						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "login",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Login successful\", () => {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"const responseData = pm.response.json();\r",
-							"console.log(responseData)\r",
-							"const apiToken = responseData.access_token;\r",
-							"\r",
-							"if (apiToken) {\r",
-							"    pm.environment.set(\"AUTH_TOKEN\", apiToken);\r",
-							"    console.log(\"Token saved in env.\");\r",
-							"} else {\r",
-							"    console.error(\"No token in response!\");\r",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"admin@practicesoftwaretesting.com\",\r\n  \"password\": \"welcome01\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8091/users/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8091",
-					"path": [
-						"users",
-						"login"
 					]
 				}
 			},
@@ -460,7 +460,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"first_name\": \"John1\",\r\n  \"last_name\": \"Doe1\",\r\n  \"address\": {\r\n    \"street\": \"Street 2\",\r\n    \"city\": \"City2\",\r\n    \"state\": \"State2\",\r\n    \"country\": \"Country\",\r\n    \"postal_code\": \"1234AA\"\r\n  },\r\n  \"phone\": \"0987654121\",\r\n  \"dob\": \"1970-01-02\",\r\n  \"password\": \"SecretSuper123#\",\r\n  \"email\": \"john@doe2.example\"\r\n}",
+					"raw": "{\r\n  \"first_name\": \"John1\",\r\n  \"last_name\": \"Doe1\",\r\n  \"address\": {\r\n    \"street\": \"Street 2\",\r\n    \"city\": \"City2\",\r\n    \"state\": \"State2\",\r\n    \"country\": \"Country\",\r\n    \"postal_code\": \"1234AA\"\r\n  },\r\n  \"phone\": \"0987654121\",\r\n  \"dob\": \"1970-01-02\",\r\n  \"password\": \"SecretSuper123#\",\r\n  \"email\": \"john@doe2.example\",\r\n  \"failed_login_attempts\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
