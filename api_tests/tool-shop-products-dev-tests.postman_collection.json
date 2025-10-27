@@ -506,7 +506,7 @@
 			"response": []
 		},
 		{
-			"name": "addProcutTooLongNameNegativeTests",
+			"name": "addProcutTooLongNameDestructiveTests",
 			"event": [
 				{
 					"listen": "test",
@@ -749,7 +749,7 @@
 			"response": []
 		},
 		{
-			"name": "getProductTooLongIdNegativeTests",
+			"name": "getProductTooLongIdDestructiveTests",
 			"event": [
 				{
 					"listen": "test",

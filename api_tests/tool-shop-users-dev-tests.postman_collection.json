@@ -499,7 +499,7 @@
 			"response": []
 		},
 		{
-			"name": "getUserTooLongIdNegativeTests",
+			"name": "getUserTooLongIdDestructiveTests",
 			"event": [
 				{
 					"listen": "test",
