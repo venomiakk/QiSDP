@@ -7,90 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "setup",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Setup successful and variables saved\", () => {\r",
-							"    pm.response.to.have.status(200);\r",
-							"\r",
-							"    const response = pm.response.json();\r",
-							"\r",
-							"    pm.expect(response.data).to.be.an('array').and.to.not.be.empty;\r",
-							"\r",
-							"    const data = response.data[0];\r",
-							"    console.log(\"Data:\", data);\r",
-							"\r",
-							"    const product_id = data.id;\r",
-							"    console.log(\"PRODUCT_ID:\", product_id);\r",
-							"    if (product_id) {\r",
-							"        pm.environment.set(\"PRODUCT_ID\", product_id);\r",
-							"        console.log(\"product_id was saved in env\");\r",
-							"    } else {\r",
-							"        console.error(\"product_id was not found\");\r",
-							"    }\r",
-							"\r",
-							"    const image_id = data.product_image ? data.product_image.id : null;\r",
-							"    console.log(\"IMAGE_ID:\", image_id);\r",
-							"    if (image_id) {\r",
-							"        pm.environment.set(\"IMAGE_ID\", image_id);\r",
-							"        console.log(\"image_id was saved in env\");\r",
-							"    } else {\r",
-							"        console.error(\"image_id was not found (or 'product_image' object is missing)\");\r",
-							"    }\r",
-							"\r",
-							"    const category_id = data.category ? data.category.id : null;\r",
-							"    console.log(\"CATEGORY_ID:\", category_id);\r",
-							"    if (category_id) {\r",
-							"        pm.environment.set(\"CATEGORY_ID\", category_id);\r",
-							"        console.log(\"category_id was saved in env\");\r",
-							"    } else {\r",
-							"        console.error(\"category_id was not found (or 'category' object is missing)\");\r",
-							"    }\r",
-							"\r",
-							"    const brand_id = data.brand ? data.brand.id : null;\r",
-							"    console.log(\"BRAND_ID:\", brand_id);\r",
-							"    if (brand_id) {\r",
-							"        pm.environment.set(\"BRAND_ID\", brand_id);\r",
-							"        console.log(\"brand_id was saved in env\");\r",
-							"    } else {\r",
-							"        console.error(\"brand_id was not found (or 'brand' object is missing)\");\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"01K8C0HH79SFPCK49BABE6EP2F\",\r\n    \"brand_id\": \"01K8C0HGXPBQ1G68FEG31H9KN1\",\r\n    \"product_image_id\": \"01K8C0HH80JJSNGZP9FQE56KCY\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8091/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8091",
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "login",
 			"event": [
 				{
@@ -149,7 +65,539 @@
 			"response": []
 		},
 		{
-			"name": "products/get_by_id_positive",
+			"name": "setup_category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Category setup successful and variables saved\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"\r",
+							"    const response = pm.response.json();\r",
+							"\r",
+							"    const id = response.id;\r",
+							"    console.log(\"CATEGORY_ID:\", id);\r",
+							"    if (id) {\r",
+							"        pm.environment.set(\"CATEGORY_ID\", id);\r",
+							"        console.log(\"ID was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"ID was not found\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"new category\",\r\n  \"slug\": \"new-category\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setup_brand",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Brand setup successful and variables saved\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"\r",
+							"    const response = pm.response.json();\r",
+							"\r",
+							"    const id = response.id;\r",
+							"    console.log(\"BRAND_ID:\", id);\r",
+							"    if (id) {\r",
+							"        pm.environment.set(\"BRAND_ID\", id);\r",
+							"        console.log(\"ID was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"ID was not found\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"new brand\",\r\n  \"slug\": \"new-brand\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/brands",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"brands"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setup_image",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Image setup successful and variables saved\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const response = pm.response.json();\r",
+							"\r",
+							"    pm.expect(response.data).to.be.an('array').and.to.not.be.empty;\r",
+							"\r",
+							"    const data = response.data[0];\r",
+							"    console.log(\"Data:\", data);\r",
+							"\r",
+							"    // const product_id = data.id;\r",
+							"    // console.log(\"PRODUCT_ID:\", product_id);\r",
+							"    // if (product_id) {\r",
+							"    //     pm.environment.set(\"PRODUCT_ID\", product_id);\r",
+							"    //     console.log(\"product_id was saved in env\");\r",
+							"    // } else {\r",
+							"    //     console.error(\"product_id was not found\");\r",
+							"    // }\r",
+							"\r",
+							"    const image_id = data.product_image ? data.product_image.id : null;\r",
+							"    console.log(\"IMAGE_ID:\", image_id);\r",
+							"    if (image_id) {\r",
+							"        pm.environment.set(\"IMAGE_ID\", image_id);\r",
+							"        console.log(\"image_id was saved in env\");\r",
+							"    } else {\r",
+							"        console.error(\"image_id was not found (or 'product_image' object is missing)\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"01K8C0HH79SFPCK49BABE6EP2F\",\r\n    \"brand_id\": \"01K8C0HGXPBQ1G68FEG31H9KN1\",\r\n    \"product_image_id\": \"01K8C0HH80JJSNGZP9FQE56KCY\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8091/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addProductPositiveTests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {\r",
+							"  \"name\": \"string\",\r",
+							"  \"description\": \"string\",\r",
+							"  \"price\": \"number\",\r",
+							"  \"id\": \"number\"\r",
+							"}\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code should be 201 Created\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should match the product schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"    });\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"const responseData = pm.response.json();\r",
+							"console.log(responseData)\r",
+							"const id = responseData.id;\r",
+							"\r",
+							"if (id) {\r",
+							"    pm.environment.set(\"PRODUCT_ID\", id);\r",
+							"    console.log(\"Id was saved in env\");\r",
+							"} else {\r",
+							"    console.error(\"Id was not saved in env\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addProductInvalidPriceNegativeTests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 422 Unprocessable Entity\", function () {\r",
+							"    pm.response.to.have.status(422)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain a price field with error messages\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"price\");\r",
+							"    pm.expect(jsonData.product_image_id).to.be.a(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
+							"});\r",
+							"\r",
+							"// CLEANUP\r",
+							"\r",
+							"if (pm.response.code === 201) {\r",
+							"    console.error(\"BUG: Added product with negative price!\");\r",
+							"    const responseData = pm.response.json();\r",
+							"    const badProductId = responseData.id;\r",
+							"    \r",
+							"    if (badProductId) {\r",
+							"        pm.sendRequest({\r",
+							"            url: `http://localhost:8091/products/${badProductId}`,\r",
+							"            method: 'DELETE',\r",
+							"            header: {\r",
+							"                'Authorization': `Bearer ${pm.environment.get(\"AUTH_TOKEN\")}`\r",
+							"            }\r",
+							"        }, function (err, res) {\r",
+							"            if (err) {\r",
+							"                console.error(\"CLEANUP ERROR\", err);\r",
+							"            } else if (res.code === 204) {\r",
+							"                console.log(\"CLEANUP SUCCESS\");\r",
+							"            } else {\r",
+							"                console.warn(`CLEANUP RETURNED ${res.code}.`);\r",
+							"            }\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addProductInvalidImageIdNegativeTests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 422 Unprocessable Entity\", function () {\r",
+							"    pm.response.to.have.status(422)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain product_image_id with error messages\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"product_image_id\");\r",
+							"    pm.expect(jsonData.product_image_id).to.be.a(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
+							"});\r",
+							"\r",
+							"// CLEANUP\r",
+							"\r",
+							"if (pm.response.code === 201) {\r",
+							"    console.error(\"BUG: Added product with wrong image id!\");\r",
+							"    const responseData = pm.response.json();\r",
+							"    const badProductId = responseData.id;\r",
+							"    \r",
+							"    if (badProductId) {\r",
+							"        pm.sendRequest({\r",
+							"            url: `http://localhost:8091/products/${badProductId}`,\r",
+							"            method: 'DELETE',\r",
+							"            header: {\r",
+							"                'Authorization': `Bearer ${pm.environment.get(\"AUTH_TOKEN\")}`\r",
+							"            }\r",
+							"        }, function (err, res) {\r",
+							"            if (err) {\r",
+							"                console.error(\"CLEANUP ERROR\", err);\r",
+							"            } else if (res.code === 204) {\r",
+							"                console.log(\"CLEANUP SUCCESS\");\r",
+							"            } else {\r",
+							"                console.warn(`CLEANUP RETURNED ${res.code}.`);\r",
+							"            }\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": 1,\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addProcutTooLongNameNegativeTests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 422 Unprocessable Entity\", function () {\r",
+							"    pm.response.to.have.status(422)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain name field with error messages \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"name\");\r",
+							"    pm.expect(jsonData.name).to.be.a(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
+							"});\r",
+							"\r",
+							"// CLEANUP\r",
+							"\r",
+							"if (pm.response.code === 201) {\r",
+							"    console.error(\"BUG: Added product with too long name!\");\r",
+							"    const responseData = pm.response.json();\r",
+							"    const badProductId = responseData.id;\r",
+							"    \r",
+							"    if (badProductId) {\r",
+							"        pm.sendRequest({\r",
+							"            url: `http://localhost:8091/products/${badProductId}`,\r",
+							"            method: 'DELETE',\r",
+							"            header: {\r",
+							"                'Authorization': `Bearer ${pm.environment.get(\"AUTH_TOKEN\")}`\r",
+							"            }\r",
+							"        }, function (err, res) {\r",
+							"            if (err) {\r",
+							"                console.error(\"CLEANUP ERROR\", err);\r",
+							"            } else if (res.code === 204) {\r",
+							"                console.log(\"CLEANUP SUCCESS\");\r",
+							"            } else {\r",
+							"                console.warn(`CLEANUP RETURNED ${res.code}.`);\r",
+							"            }\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProductPositiveTests",
 			"event": [
 				{
 					"listen": "test",
@@ -192,19 +640,29 @@
 							"}\r",
 							"\r",
 							"\r",
-							"pm.test(\"getProductByIdPositiveTest\", function () {\r",
+							"pm.test(\"Status code should be 200 OK\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"getProductByIdResponsStructPositiveTest\", function () {\r",
+							"pm.test(\"Response should match the product schema\", function () {\r",
 							"    pm.response.to.have.jsonSchema(schema);\r",
 							"});\r",
 							"\r",
 							"\r",
-							"pm.test(\"getProductByIdHeadersPositiveTest\", function () {\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
 							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
 							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
 							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
@@ -233,26 +691,36 @@
 			"response": []
 		},
 		{
-			"name": "products/get_by_id_negative",
+			"name": "getProductInvalidIdNegativeTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"getProductWithWrongIdNegativeTest\", function () {\r",
+							"pm.test(\"Status code should be 404 Not Found\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"getProductWithWrongResponseNegativeTest\", function () {\r",
+							"pm.test(\"Response should contain a message property\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property(\"message\");\r",
 							"    pm.expect(jsonData.message).to.be.a(\"string\");\r",
 							"});\r",
 							"\r",
-							"pm.test(\"getProductWithWrongHeadersNegativeTest\", function () {\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
 							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
 							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
 							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
@@ -281,18 +749,21 @@
 			"response": []
 		},
 		{
-			"name": "products/get_by_id_destructive1",
+			"name": "getProductTooLongIdNegativeTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"getProductWithTooLongIdDestructiveTest\", function () {\r",
+							"pm.test(\"Status code should be 414 URI To Long\", function () {\r",
 							"    pm.response.to.have.status(414);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"getProductWithTooLongIdHeadersNegativeTest\", function () {\r",
+							"pm.test(\"Response should contain Content-Type header\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"text/html\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain Server header\", function (){\r",
 							"    pm.response.to.have.header(\"Server\");\r",
 							"});"
 						],
@@ -321,238 +792,35 @@
 			"response": []
 		},
 		{
-			"name": "add_product_positive",
+			"name": "updateProductPositiveTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"const schema = {\r",
-							"  \"name\": \"string\",\r",
-							"  \"description\": \"string\",\r",
-							"  \"price\": \"number\",\r",
-							"  \"id\": \"number\"\r",
-							"}\r",
-							"\r",
-							"\r",
-							"pm.test(\"addProductPositiveTest\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"addProductResponseSchemaTest\", function () {\r",
-							"    pm.response.to.have.jsonSchema(schema);\r",
-							"    });\r",
-							"\r",
-							"pm.test(\"properHeadersPositiveTest\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
-							"    pm.response.to.have.header(\"Server\");\r",
-							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
-							"});\r",
-							"\r",
-							"\r",
-							"const responseData = pm.response.json();\r",
-							"console.log(responseData)\r",
-							"const id = responseData.id;\r",
-							"\r",
-							"if (id) {\r",
-							"    pm.environment.set(\"ADDED_PRODUCT\", id);\r",
-							"    console.log(\"Id was saved in env\");\r",
-							"} else {\r",
-							"    console.error(\"Id was not saved in env\");\r",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8091/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8091",
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add_product_negative1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"addProductWithWrongPriceNegativeInputTest\", function () {\r",
-							"    pm.response.to.have.status(422)\r",
-							"});\r",
-							"\r",
-							"pm.test(\"responseStructNegativeTest\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"price\");\r",
-							"    pm.expect(jsonData.product_image_id).to.be.a(\"array\");\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8091/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8091",
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add_product_negative2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"addProductWithStringProductIdNegativeInputTest\", function () {\r",
-							"    pm.response.to.have.status(422)\r",
-							"});\r",
-							"\r",
-							"pm.test(\"responseStructNegativeTest\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"product_image_id\");\r",
-							"    pm.expect(jsonData.product_image_id).to.be.a(\"array\");\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": 1,\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8091/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8091",
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add_product_destructive1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"addProductWithStringProductIdNegativeInputTest\", function () {\r",
-							"    pm.response.to.have.status(422)\r",
-							"});\r",
-							"\r",
-							"pm.test(\"responseStructNegativeTest\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property(\"name\");\r",
-							"    pm.expect(jsonData.name).to.be.a(\"array\");\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename\",\r\n    \"description\": \"desc\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"{{CATEGORY_ID}}\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8091/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8091",
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "update_product_positive",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"updateProductPositiveTest\", function () {\r",
+							"pm.test(\"Status code should be 200 OK\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"updateProductResponsePositiveTest\", function () {\r",
+							"pm.test(\"Response should contain success property with value true\", function () {\r",
 							"    pm.expect(pm.response.json()).to.have.property(\"success\", true);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -574,7 +842,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8091/products/{{ADDED_PRODUCT}}",
+					"raw": "http://localhost:8091/products/{{PRODUCT_ID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -582,25 +850,41 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"{{ADDED_PRODUCT}}"
+						"{{PRODUCT_ID}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "update_product_negative",
+			"name": "updateProductInvalidIdNegativeTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"updateProductWithWrongIdNegativeTetst\", function () {\r",
+							"pm.test(\"Status code should be 404 Not Found\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"updateProductWithWrongIdContentNegativeTetst\", function () {\r",
+							"pm.test(\"Response should contain succes property with value false\", function () {\r",
 							"    pm.expect(pm.response.json().success).to.be.false;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -637,18 +921,34 @@
 			"response": []
 		},
 		{
-			"name": "update_product_destructive1",
+			"name": "updateProductInvalidPriceNegativeTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"updateWithNegativePriceDestructiveTest\", function () {\r",
+							"pm.test(\"Status code should be 422 Unprocessable Entity\", function () {\r",
 							"    pm.response.to.have.status(422);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"updateWithNegativePriceContentDestructiveTest\", function () {\r",
+							"pm.test(\"Response should have a success property with value false\", function () {\r",
 							"    pm.expect(pm.response.json()).to.have.property(\"success\", false);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -670,7 +970,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8091/products/{{ADDED_PRODUCT}}",
+					"raw": "http://localhost:8091/products/{{PRODUCT_ID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -678,25 +978,41 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"{{ADDED_PRODUCT}}"
+						"{{PRODUCT_ID}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "update_product_destructive2",
+			"name": "updateProductInvalidCategoryIdNegativeTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"updateProductWithWrongCategoryIdDestructiveTest\", function () {\r",
+							"pm.test(\"Status code should be 422 Unprocessable Entity\", function () {\r",
 							"    pm.response.to.have.status(422);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"updateProductWithWrongCategoryIdResponseDestructiveTest\", function () {\r",
+							"pm.test(\"Response should have a success property with value false\", function () {\r",
 							"    pm.expect(pm.response.json()).to.have.property(\"success\", false);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=UTF-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -710,7 +1026,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"price\": -1.99,\r\n    \"category_id\": \"wrong_id\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"price\": 1.99,\r\n    \"category_id\": \"wrong_id\",\r\n    \"brand_id\": \"{{BRAND_ID}}\",\r\n    \"product_image_id\": \"{{IMAGE_ID}}\",\r\n    \"is_location_offer\": 1,\r\n    \"is_rental\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -733,14 +1049,30 @@
 			"response": []
 		},
 		{
-			"name": "delete_product_positive",
+			"name": "deleteProductPositiveTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"deleteProductPositiveTest\", function () {\r",
+							"pm.test(\"Status code should be 204 No Content\", function () {\r",
 							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});\r",
 							"\r",
 							"\r",
@@ -766,7 +1098,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8091/products/{{ADDED_PRODUCT}}",
+					"raw": "http://localhost:8091/products/{{PRODUCT_ID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -774,25 +1106,41 @@
 					"port": "8091",
 					"path": [
 						"products",
-						"{{ADDED_PRODUCT}}"
+						"{{PRODUCT_ID}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "delete_product_negative",
+			"name": "deleteProductInvalidIdNegativeTests",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"deleteProductWithWrongIdNegativeTest\", function () {\r",
+							"pm.test(\"Status code should be 422 Unprocessable Entity\", function () {\r",
 							"    pm.response.to.have.status(422);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"deleteProductWithWrongIdResponseBodyNegativeTest\", function () {\r",
+							"pm.test(\"Response should contain the correct error message for invalid id\", function () {\r",
 							"    pm.expect(pm.response.json().id).to.eql([\"The selected id is invalid.\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Content-Type header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Server header\", function () {\r",
+							"    pm.response.to.have.header(\"Server\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Allow-Origin header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Allow-Origin\", \"*\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain correct Access-Control-Expose-Headers header\", function () {\r",
+							"    pm.response.to.have.header(\"Access-Control-Expose-Headers\", \"Content-Disposition\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -824,6 +1172,96 @@
 					"path": [
 						"products",
 						"wrong_id"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teardown_brand",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Category teardown successful\", () => {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8091/brands/{{BRAND_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"brands",
+						"{{BRAND_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teardown_category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Category teardown successful\", () => {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8091/categories/{{CATEGORY_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"categories",
+						"{{CATEGORY_ID}}"
 					]
 				}
 			},
