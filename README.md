@@ -24,7 +24,7 @@ docker compose exec -e DB_HOST=mariadb laravel-api php artisan migrate --force
 docker compose exec -e DB_HOST=mariadb laravel-api php artisan db:seed --force
 ```
 
-## api tests
+## API Tests
 
 - postman
 
@@ -35,3 +35,24 @@ npm install newman
 
 newman run xxx.postman_collection.json
 ```
+
+## UI Tests
+
+- cypress
+
+```bash
+npm install cypress --save-dev
+```
+
+To open Cypress app:
+```bash
+npx cypress open
+```
+To run tests in terminal:
+```bash
+npx cypress run
+```
+
+## BDD Tests
+
+- cucumber
