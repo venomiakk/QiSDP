@@ -9,3 +9,7 @@ npm install cypress --save-dev
 ```bash
 npx cypress open
 ```
+
+```bash
+npx cypress run
+```
