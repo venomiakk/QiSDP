@@ -1,5 +1,5 @@
-const { Given, When, Then } = require("@cucumber/cucumber");
-const { expect: expectPW } = require("@playwright/test"); // Pamiętaj o aliasie!
+import { Given, When, Then } from "@cucumber/cucumber";
+import { expect as expectPW } from "@playwright/test";
 
 Given(
   "I am on the login page to get to categories {string}",
